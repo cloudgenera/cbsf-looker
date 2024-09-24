@@ -41,6 +41,31 @@ view: contract_agreement {
     type: number
     sql: ${TABLE}.Unused ;;
   }
+  dimension: total_commitment {
+    type: number
+    sql: ${commit} + ${prev_year_rollover_cost} ;;
+  }
+  measure: contract_dedicated {
+    type: sum
+    sql: ${dedicated} ;;
+  }
+  measure: contract_unallocated {
+    type: sum
+    sql: ${unallocated} ;;
+  }
+  measure: contract_license {
+    type: sum
+    sql: ${license} ;;
+  }
+  measure: current_commit {
+    type: sum
+    filters: [term_type: "Current"]
+    sql: ${commit} ;;
+  }
+  measure: current_budget {
+    type: number
+    sql: ${current_commit}/12 ;;
+  }
   measure: count {
     type: count
   }
