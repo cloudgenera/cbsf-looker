@@ -13,13 +13,36 @@ datagroup: cbsf_v1_default_datagroup {
 
 persist_with: cbsf_v1_default_datagroup
 
-explore: budgetitems {}
+explore: budgetitems {
+  join: budgets {
+    type: left_outer
+    sql_on: ${budgetitems.budget_name} = ${budgets.budget_name} ;;
+    relationship: many_to_one
+  }
+}
 
-explore: budgets {}
+explore: budgets {
+  join: budgetyears {
+    type: left_outer
+    sql_on: ${budgets.budget_name} = ${budgetyears.budget_name} ;;
+    relationship: one_to_many
+  }
+  join: budgetitems {
+    type: left_outer
+    sql_on: ${budgets.budget_name} = ${budgetitems.budget_name} ;;
+    relationship: one_to_many
+  }
+}
 
 explore: contract_detail {}
 
-explore: budgetyears {}
+explore: budgetyears {
+  join: budgets {
+    type: left_outer
+    sql_on: ${budgetyears.budget_name} = ${budgets.budget_name} ;;
+    relationship: many_to_one
+  }
+}
 
 explore: contract_summary {}
 
