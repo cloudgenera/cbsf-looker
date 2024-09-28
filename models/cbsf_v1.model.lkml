@@ -13,6 +13,8 @@ datagroup: cbsf_v1_default_datagroup {
 
 persist_with: cbsf_v1_default_datagroup
 
+explore: budget_summary {}
+
 explore: budgetitems {
   join: budgets {
     type: left_outer
