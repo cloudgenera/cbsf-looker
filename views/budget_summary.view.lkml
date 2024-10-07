@@ -3,7 +3,7 @@ view: budget_summary {
     sql: SELECT
         b.GroupName AS group_name
         , b.BudgetName AS budget_name
-        , DATEADD(m, DATEDIFF(m, 0, cs.invoice_date), 0) AS invoice_month
+        , DATE_TRUNC(cs.invoice_date, MONTH) AS invoice_month
         , SUM(cs.net_cost) AS cost
       FROM budgets b
       LEFT JOIN budget-items bi ON b.BudgetName = bi.BudgetName
