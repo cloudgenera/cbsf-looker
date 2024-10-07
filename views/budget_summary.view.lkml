@@ -46,4 +46,9 @@ view: budget_summary {
     type: number
     sql: ${TABLE}.cost ;;
   }
+
+  measure: fucker {
+    type: number
+    sql: ${cost} ;;
+  }
 }
