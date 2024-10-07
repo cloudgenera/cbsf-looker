@@ -1,41 +1,35 @@
 view: budget_summary {
   derived_table: {
     sql: SELECT
-        b.GroupName
-        , b.BudgetName
-        , DATEADD(m, DATEDIFF(m, 0, cs.InvoiceDate), 0) AS InvoiceMonth
-        , CASE cs.CostType WHEN IN ("History", "Previous Month") THEN SUM(cs.TotalCost) ELSE 0 END AS Actual
-        , CASE cs.CostType WHEN IN ("History", "Previous Month") THEN 0 ELSE SUM(cs.TotalCost) END AS Forecast
+        b.GroupName AS group_name
+        , b.BudgetName AS budget_name
+        , DATEADD(m, DATEDIFF(m, 0, cs.invoice_date), 0) AS invoice_month
+        , SUM(cs.net_cost) AS cost
       FROM budgets b
       LEFT JOIN budget-items bi ON b.BudgetName = bi.BudgetName
-      LEFT JOIN contract-summary cs ON bi.CostGroupName = cs.CostGroupName
+      LEFT JOIN cost_summary cs ON bi.CostGroupName = cs.cost_group
       GROUP BY GroupName, BudgetName, InvoiceMonth
       ;;
   }
 
   dimension: group_name {
     type: string
-    sql: ${TABLE}.GroupName ;;
+    sql: ${TABLE}.group_name ;;
   }
 
   dimension: budget_name {
     type: string
-    sql: ${TABLE}.BudgetName ;;
+    sql: ${TABLE}.budget_name ;;
   }
 
   dimension_group: invoice_month {
     type: time
     timeframes: [date, week, month, year]
-    sql: ${TABLE}.InvoiceMonth ;;
+    sql: ${TABLE}.invoice_month ;;
   }
 
-  dimension: actual {
+  dimension: cost {
     type: number
-    sql: ${TABLE}.Actual ;;
-  }
-
-  dimension: forecast {
-    type: number
-    sql: ${TABLE}.Forecast ;;
+    sql: ${TABLE}.cost ;;
   }
 }

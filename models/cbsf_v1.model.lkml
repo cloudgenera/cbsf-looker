@@ -21,9 +21,9 @@ explore: budgetitems {
     sql_on: ${budgetitems.budget_name} = ${budgets.budget_name} ;;
     relationship: many_to_one
   }
-  join: contract_summary {
+  join: cost_summary {
     type: left_outer
-    sql_on: ${budgetitems.cost_group_name} = ${contract_summary.cost_group_name} ;;
+    sql_on: ${budgetitems.cost_group_name} = ${cost_summary.cost_group} ;;
     relationship: many_to_many
   }
 }
@@ -55,6 +55,14 @@ explore: contract_summary {
   join: budgetitems {
     type: left_outer
     sql_on: ${contract_summary.cost_group_name} = ${budgetitems.cost_group_name} ;;
+    relationship: many_to_many
+  }
+}
+
+explore: cost_summary {
+  join: budgetitems {
+    type: left_outer
+    sql_on: ${cost_summary.cost_group} = ${budgetitems.cost_group_name} ;;
     relationship: many_to_many
   }
 }
