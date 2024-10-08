@@ -52,4 +52,9 @@ view: budget_summary {
     type: number
     sql: ${TABLE}.cost ;;
   }
+
+  measure: cost_share {
+    type: sum
+    sql: ${cost} * ${share} ;;
+  }
 }
