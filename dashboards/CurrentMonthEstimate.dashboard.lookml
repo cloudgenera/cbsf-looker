@@ -6,29 +6,6 @@
   description: ''
   preferred_slug: yvVO8azRyuESP7t2O3QFEJ
   elements:
-  - title: Monthly Google Commit
-    name: Monthly Google Commit
-    model: cg_bigquery
-    explore: contract_agreement
-    type: single_value
-    fields: [contract_agreement.current_budget]
-    limit: 500
-    column_limit: 50
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: false
-    comparison_type: value
-    comparison_reverse_colors: false
-    show_comparison_label: true
-    enable_conditional_formatting: false
-    conditional_formatting_include_totals: false
-    conditional_formatting_include_nulls: false
-    value_format: "#,##0.00"
-    defaults_version: 1
-    row: 0
-    col: 16
-    width: 8
-    height: 5
   - title: Current Month Estimate
     name: Current Month Estimate
     model: cbsf_v1
@@ -239,3 +216,26 @@
     col: 16
     width: 8
     height: 9
+  - title: Monthly Google Commit
+    name: Monthly Google Commit
+    model: cbsf_v1
+    explore: contract_agreement_v2
+    type: single_value
+    fields: [contract_agreement_v2.current_budget]
+    limit: 500
+    column_limit: 50
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: false
+    comparison_type: value
+    comparison_reverse_colors: false
+    show_comparison_label: true
+    enable_conditional_formatting: false
+    conditional_formatting_include_totals: false
+    conditional_formatting_include_nulls: false
+    value_format: "#,##0.00"
+    defaults_version: 1
+    row: 0
+    col: 16
+    width: 8
+    height: 5

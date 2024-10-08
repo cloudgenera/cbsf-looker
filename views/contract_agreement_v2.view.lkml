@@ -41,6 +41,15 @@ view: contract_agreement_v2 {
     type: number
     sql: ${TABLE}.unused ;;
   }
+  measure: current_commit {
+    type: sum
+    filters: [term_type: "Current"]
+    sql: ${commit} ;;
+  }
+  measure: current_budget {
+    type: number
+    sql: ${current_commit}/12 ;;
+  }
   measure: count {
     type: count
   }
