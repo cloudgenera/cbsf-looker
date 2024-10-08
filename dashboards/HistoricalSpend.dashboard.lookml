@@ -6,16 +6,122 @@
   description: ''
   preferred_slug: DHdluVkGpsiXVD89ZWjZqM
   elements:
+  - title: Total Cloud Spend
+    name: Total Cloud Spend
+    model: cbsf_v1
+    explore: cost_summary
+    type: single_value
+    fields: [sum_of_net_cost]
+    filters:
+      cost_summary.amount_type: Previous Month,History
+    limit: 500
+    column_limit: 50
+    dynamic_fields:
+    - _kind_hint: measure
+      _type_hint: number
+      based_on: cost_summary.net_cost
+      expression: ''
+      label: Sum of Net Cost
+      measure: sum_of_net_cost
+      type: sum
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: false
+    comparison_type: value
+    comparison_reverse_colors: false
+    show_comparison_label: true
+    enable_conditional_formatting: false
+    conditional_formatting_include_totals: false
+    conditional_formatting_include_nulls: false
+    value_format: "$#,##0.00"
+    defaults_version: 1
+    listen:
+      Cost Group: cost_summary.cost_group
+      Invoice Date: cost_summary.invoice_date_date
+    row: 7
+    col: 18
+    width: 6
+    height: 6
+  - title: Google Cloud Spend by Cost Group
+    name: Google Cloud Spend by Cost Group
+    model: cbsf_v1
+    explore: cost_summary
+    type: looker_grid
+    fields: [cost_summary.cost_group, cost_summary.dedicated_net_cost, cost_summary.shared_net_cost,
+      cost_summary.unallocated_net_cost, sum_of_net_cost]
+    filters:
+      cost_summary.amount_type: Previous Month,History
+    sorts: [cost_summary.cost_group]
+    limit: 500
+    column_limit: 50
+    total: true
+    dynamic_fields:
+    - category: measure
+      expression: ''
+      label: Sum of Net Cost
+      value_format:
+      value_format_name: usd
+      based_on: cost_summary.net_cost
+      _kind_hint: measure
+      measure: sum_of_net_cost
+      type: sum
+      _type_hint: number
+    show_view_names: false
+    show_row_numbers: true
+    transpose: false
+    truncate_text: true
+    hide_totals: false
+    hide_row_totals: false
+    size_to_fit: true
+    table_theme: white
+    limit_displayed_rows: false
+    enable_conditional_formatting: false
+    header_text_alignment: left
+    header_font_size: '12'
+    rows_font_size: '12'
+    conditional_formatting_include_totals: false
+    conditional_formatting_include_nulls: false
+    show_sql_query_menu_options: false
+    show_totals: true
+    show_row_totals: true
+    truncate_header: false
+    minimum_column_width: 75
+    series_cell_visualizations:
+      cost_summary.dedicated_net_cost:
+        is_active: false
+    series_value_format:
+      sum_of_net_cost: "$#,##0.00"
+    defaults_version: 1
+    listen:
+      Cost Group: cost_summary.cost_group
+      Invoice Date: cost_summary.invoice_date_date
+    row: 7
+    col: 0
+    width: 18
+    height: 6
   - title: Historical Performance by Cost Group
     name: Historical Performance by Cost Group
     model: cbsf_v1
-    explore: contract_summary
+    explore: cost_summary
     type: looker_column
-    fields: [contract_summary.invoice_year, contract_summary.invoice_quarter_of_year,
-      contract_summary.invoice_month_name, contract_summary.invoice_month, contract_summary.estimated_invoice]
-    sorts: [contract_summary.invoice_month]
+    fields: [cost_summary.invoice_date_quarter, cost_summary.invoice_date_month_name,
+      cost_summary.invoice_date_month, sum_of_net_cost]
+    filters:
+      cost_summary.amount_type: Previous Month,History
+    sorts: [cost_summary.invoice_date_month]
     limit: 500
     column_limit: 50
+    dynamic_fields:
+    - category: measure
+      expression: ''
+      label: Sum of Net Cost
+      value_format:
+      value_format_name: usd
+      based_on: cost_summary.net_cost
+      _kind_hint: measure
+      measure: sum_of_net_cost
+      type: sum
+      _type_hint: number
     x_axis_gridlines: false
     y_axis_gridlines: true
     show_view_names: false
@@ -43,125 +149,36 @@
     show_totals_labels: false
     show_silhouette: false
     totals_color: "#808080"
+    x_axis_zoom: true
+    y_axis_zoom: true
+    label_value_format: ''
+    hidden_fields: [cost_summary.invoice_date_month]
     defaults_version: 1
-    hidden_fields: [contract_summary.invoice_month]
     listen:
-      Cost Group Name: contract_summary.cost_group_name
-      Cost Group Type: contract_summary.cost_group_type
-      Invoice Start: contract_summary.invoice_month
+      Cost Group: cost_summary.cost_group
+      Invoice Date: cost_summary.invoice_date_date
     row: 0
     col: 0
     width: 24
     height: 7
-  - title: Google Cloud Spend by Cost Group
-    name: Google Cloud Spend by Cost Group
-    model: cbsf_v1
-    explore: contract_summary
-    type: looker_grid
-    fields: [contract_summary.cost_group_name, contract_summary.dedicated, contract_summary.shared,
-      contract_summary.license, contract_summary.unallocated, contract_summary.estimated_invoice]
-    sorts: [contract_summary.cost_group_name]
-    limit: 500
-    column_limit: 50
-    total: true
-    dynamic_fields:
-    - _kind_hint: measure
-      _type_hint: list
-      based_on: contract_summary.cost_group_name
-      expression: ''
-      label: List of Cost Group Name
-      measure: list_of_cost_group_name
-      type: list
-    show_view_names: false
-    show_row_numbers: false
-    transpose: false
-    truncate_text: true
-    hide_totals: false
-    hide_row_totals: false
-    size_to_fit: true
-    table_theme: white
-    limit_displayed_rows: false
-    enable_conditional_formatting: false
-    header_text_alignment: left
-    header_font_size: '12'
-    rows_font_size: '12'
-    conditional_formatting_include_totals: false
-    conditional_formatting_include_nulls: false
-    show_sql_query_menu_options: false
-    show_totals: true
-    show_row_totals: true
-    truncate_header: false
-    minimum_column_width: 75
-    series_cell_visualizations:
-      contract_summary.estimated_invoice:
-        is_active: true
-    defaults_version: 1
-    hidden_pivots: {}
-    listen:
-      Cost Group Name: contract_summary.cost_group_name
-      Cost Group Type: contract_summary.cost_group_type
-      Invoice Start: contract_summary.invoice_month
-    row: 7
-    col: 0
-    width: 19
-    height: 6
-  - title: Total Cloud Spend
-    name: Total Cloud Spend
-    model: cbsf_v1
-    explore: contract_summary
-    type: single_value
-    fields: [contract_summary.estimated_invoice]
-    limit: 500
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: false
-    comparison_type: value
-    comparison_reverse_colors: false
-    show_comparison_label: true
-    enable_conditional_formatting: false
-    conditional_formatting_include_totals: false
-    conditional_formatting_include_nulls: false
-    defaults_version: 1
-    listen:
-      Cost Group Type: contract_summary.cost_group_type
-      Cost Group Name: contract_summary.cost_group_name
-      Invoice Start: contract_summary.invoice_month
-      Invoice End: contract_summary.invoice_month
-    row: 7
-    col: 19
-    width: 5
-    height: 6
   filters:
-  - name: Cost Group Name
-    title: Cost Group Name
+  - name: Cost Group
+    title: Cost Group
     type: field_filter
     default_value: ''
     allow_multiple_values: true
     required: false
     ui_config:
-      type: checkboxes
+      type: tag_list
       display: popover
     model: cbsf_v1
-    explore: contract_summary
+    explore: cost_summary
     listens_to_filters: []
-    field: contract_summary.cost_group_name
-  - name: Cost Group Type
-    title: Cost Group Type
+    field: cost_summary.cost_group
+  - name: Invoice Date
+    title: Invoice Date
     type: field_filter
-    default_value: ''
-    allow_multiple_values: true
-    required: false
-    ui_config:
-      type: checkboxes
-      display: popover
-    model: cbsf_v1
-    explore: contract_summary
-    listens_to_filters: []
-    field: contract_summary.cost_group_type
-  - name: Invoice Start
-    title: Invoice Start
-    type: field_filter
-    default_value: after 2022/09/01
+    default_value: 2019/09/01 to 2025/12/31
     allow_multiple_values: false
     required: false
     ui_config:
@@ -169,20 +186,6 @@
       display: popover
       options: []
     model: cbsf_v1
-    explore: contract_summary
+    explore: cost_summary
     listens_to_filters: []
-    field: contract_summary.invoice_month
-  - name: Invoice End
-    title: Invoice End
-    type: field_filter
-    default_value: before 2025/11/30
-    allow_multiple_values: false
-    required: false
-    ui_config:
-      type: advanced
-      display: popover
-      options: []
-    model: cbsf_v1
-    explore: contract_summary
-    listens_to_filters: []
-    field: contract_summary.invoice_month
+    field: cost_summary.invoice_date_date
