@@ -19,7 +19,7 @@ view: budget_summary {
             SUM(cs.shared_license_credit) +
             SUM(cs.unallocated_infrastructure_credit) +
             SUM(cs.unallocated_license_credit)
-          ) AS cost
+          ) * SUM(bi.Share) AS cost
       FROM `cloudgenera-public.TestBigQuery.budgets` b
       LEFT JOIN `cloudgenera-public.TestBigQuery.budget-items` bi ON b.BudgetName = bi.BudgetName
       LEFT JOIN `cloudgenera-public.TestBigQuery.cost_summary` cs ON bi.CostGroupName = cs.cost_group
