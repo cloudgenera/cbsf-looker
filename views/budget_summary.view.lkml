@@ -43,7 +43,7 @@ view: budget_summary {
   }
 
   measure: cost {
-    type: number
+    type: sum
     sql: ${TABLE}.cost ;;
   }
 }
