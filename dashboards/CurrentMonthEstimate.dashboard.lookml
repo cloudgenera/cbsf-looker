@@ -33,7 +33,7 @@
     enable_conditional_formatting: false
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
-    value_format: "#,##0.00"
+    value_format: "$#,##0.00"
     defaults_version: 1
     listen: {}
     row: 0
@@ -68,7 +68,7 @@
     enable_conditional_formatting: false
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
-    value_format: "#,##0.00"
+    value_format: "$#,##0.00"
     hidden_fields: [cost_summary.dedicated_net_cost, cost_summary.current_and_previous_months_count]
     defaults_version: 1
     listen: {}
@@ -201,13 +201,16 @@
     limit: 500
     column_limit: 50
     dynamic_fields:
-    - _kind_hint: measure
-      _type_hint: number
-      based_on: cost_summary.net_cost
+    - category: measure
       expression: ''
       label: Sum of Net Cost
+      value_format:
+      value_format_name: usd
+      based_on: cost_summary.net_cost
+      _kind_hint: measure
       measure: sum_of_net_cost
       type: sum
+      _type_hint: number
     value_labels: legend
     label_type: labPer
     defaults_version: 1
@@ -233,8 +236,9 @@
     enable_conditional_formatting: false
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
-    value_format: "#,##0.00"
+    value_format: "$#,##0.00"
     defaults_version: 1
+    listen: {}
     row: 0
     col: 16
     width: 8

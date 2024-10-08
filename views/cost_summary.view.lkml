@@ -86,19 +86,19 @@ view: cost_summary {
     type: sum
     sql:  ${dedicated_infrastructure_cost}+${dedicated_license_cost}
           +${dedicated_infrastructure_credit}+${dedicated_license_credit};;
-    value_format: "#,##0.00"
+    value_format: "$#,##0.00"
   }
   measure: shared_net_cost {
     type: sum
     sql:  ${shared_infrastructure_cost}+${shared_license_cost}
           +${shared_infrastructure_credit}+${shared_license_credit};;
-    value_format: "#,##0.00"
+    value_format: "$#,##0.00"
   }
   measure: unallocated_net_cost {
     type: sum
     sql:  ${unallocated_infrastructure_cost}+${unallocated_license_cost}
           +${unallocated_infrastructure_credit}+${unallocated_license_credit};;
-    value_format: "#,##0.00"
+    value_format: "$#,##0.00"
   }
   measure: current_and_previous_months_count {
     type: count_distinct
@@ -111,7 +111,7 @@ view: cost_summary {
           +${dedicated_infrastructure_credit}+${dedicated_license_credit}
           +${shared_infrastructure_cost}+${shared_license_cost}
           +${shared_infrastructure_credit}+${shared_license_credit};;
-    value_format: "#,##0.00"
+    value_format: "$#,##0.00"
   }
   measure: count {
     type: count

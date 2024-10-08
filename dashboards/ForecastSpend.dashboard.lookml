@@ -33,7 +33,7 @@
     enable_conditional_formatting: false
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
-    value_format: "#,##0.00"
+    value_format: "$#,##0.00"
     defaults_version: 1
     listen:
       Invoice Date Month: cost_summary.invoice_date_month
@@ -136,20 +136,22 @@
     rows_font_size: '12'
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
-    hidden_pivots: {}
-    defaults_version: 1
-    minimum_column_width: 75
     show_sql_query_menu_options: false
     show_totals: true
     show_row_totals: true
     truncate_header: false
+    minimum_column_width: 75
+    series_labels:
+      sum_of_net_cost: Net Cost
     series_column_widths:
       Accredit_sum_of_net_cost: 148
     series_cell_visualizations:
       sum_of_net_cost:
         is_active: false
     series_value_format:
-      sum_of_net_cost: "#,##0.00"
+      sum_of_net_cost: "$#,##0.00"
+    hidden_pivots: {}
+    defaults_version: 1
     listen:
       Invoice Date Month: cost_summary.invoice_date_month
       Cost Group: cost_summary.cost_group
@@ -166,7 +168,7 @@
     required: false
     ui_config:
       type: day_range_picker
-      display: popover
+      display: inline
       options: []
     model: cbsf_v1
     explore: cost_summary

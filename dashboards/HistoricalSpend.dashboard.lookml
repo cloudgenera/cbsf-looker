@@ -33,7 +33,7 @@
     enable_conditional_formatting: false
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
-    value_format: "#,##0.00"
+    value_format: "$#,##0.00"
     defaults_version: 1
     listen:
       Cost Group: cost_summary.cost_group
@@ -56,13 +56,16 @@
     column_limit: 50
     total: true
     dynamic_fields:
-    - _kind_hint: measure
-      _type_hint: number
-      based_on: cost_summary.net_cost
+    - category: measure
       expression: ''
       label: Sum of Net Cost
+      value_format:
+      value_format_name: usd
+      based_on: cost_summary.net_cost
+      _kind_hint: measure
       measure: sum_of_net_cost
       type: sum
+      _type_hint: number
     show_view_names: false
     show_row_numbers: true
     transpose: false
@@ -87,7 +90,7 @@
       cost_summary.dedicated_net_cost:
         is_active: false
     series_value_format:
-      sum_of_net_cost: "#,##0.00"
+      sum_of_net_cost: "$#,##0.00"
     defaults_version: 1
     listen:
       Cost Group: cost_summary.cost_group
@@ -109,13 +112,16 @@
     limit: 500
     column_limit: 50
     dynamic_fields:
-    - _kind_hint: measure
-      _type_hint: number
-      based_on: cost_summary.net_cost
+    - category: measure
       expression: ''
       label: Sum of Net Cost
+      value_format:
+      value_format_name: usd
+      based_on: cost_summary.net_cost
+      _kind_hint: measure
       measure: sum_of_net_cost
       type: sum
+      _type_hint: number
     x_axis_gridlines: false
     y_axis_gridlines: true
     show_view_names: false
@@ -145,7 +151,7 @@
     totals_color: "#808080"
     x_axis_zoom: true
     y_axis_zoom: true
-    label_value_format: "#,##0.00"
+    label_value_format: ''
     hidden_fields: [cost_summary.invoice_date_month]
     defaults_version: 1
     listen:
