@@ -3,13 +3,27 @@ view: budget_summary {
     sql: SELECT
         b.GroupName AS group_name
         , b.BudgetName AS budget_name
-        , DATEADD(m, DATEDIFF(m, 0, cs.invoice_date), 0) AS invoice_month
-        , SUM(cs.net_cost) AS cost
-      FROM budgets b
-      LEFT JOIN budget-items bi ON b.BudgetName = bi.BudgetName
-      LEFT JOIN cost_summary cs ON bi.CostGroupName = cs.cost_group
-      GROUP BY GroupName, BudgetName, InvoiceMonth
-      ;;
+        , DATE_TRUNC(cs.invoice_date, MONTH) AS invoice_month
+        , (
+            SUM(cs.dedicated_infrastructure_cost) +
+            SUM(cs.dedicated_license_cost) +
+            SUM(cs.shared_infrastructure_cost) +
+            SUM(cs.shared_license_cost) +
+            SUM(cs.unallocated_infrastructure_cost) +
+            SUM(cs.unallocated_license_cost)
+          ) -
+          (
+            SUM(cs.dedicated_infrastructure_credit) +
+            SUM(cs.dedicated_license_credit) +
+            SUM(cs.shared_infrastructure_credit) +
+            SUM(cs.shared_license_credit) +
+            SUM(cs.unallocated_infrastructure_credit) +
+            SUM(cs.unallocated_license_credit)
+          ) AS cost
+      FROM `cloudgenera-public.TestBigQuery.budgets` b
+      LEFT JOIN `cloudgenera-public.TestBigQuery.budget-items` bi ON b.BudgetName = bi.BudgetName
+      LEFT JOIN `cloudgenera-public.TestBigQuery.cost_summary` cs ON bi.CostGroupName = cs.cost_group
+      GROUP BY group_name, budget_name, invoice_month ;;
   }
 
   dimension: group_name {
@@ -28,8 +42,8 @@ view: budget_summary {
     sql: ${TABLE}.invoice_month ;;
   }
 
-  dimension: cost {
-    type: number
+  measure: cost {
+    type: sum
     sql: ${TABLE}.cost ;;
   }
 }

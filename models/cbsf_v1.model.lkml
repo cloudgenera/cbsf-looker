@@ -68,3 +68,5 @@ explore: cost_summary {
 }
 
 explore: contract_agreement {}
+
+explore: contract_agreement_v2 {}
