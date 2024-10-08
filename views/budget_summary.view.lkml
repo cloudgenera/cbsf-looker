@@ -42,13 +42,8 @@ view: budget_summary {
     sql: ${TABLE}.invoice_month ;;
   }
 
-  dimension: cost {
+  measure: cost {
     type: number
     sql: ${TABLE}.cost ;;
-  }
-
-  measure: fucker {
-    type: number
-    sql: ${cost} ;;
   }
 }
