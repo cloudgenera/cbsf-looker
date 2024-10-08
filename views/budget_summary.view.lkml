@@ -5,22 +5,14 @@ view: budget_summary {
         , b.BudgetName AS budget_name
         , bi.Share AS share
         , DATE_TRUNC(cs.invoice_date, MONTH) AS invoice_month
-        , (
-            SUM(cs.dedicated_infrastructure_cost) +
-            SUM(cs.dedicated_license_cost) +
-            SUM(cs.shared_infrastructure_cost) +
-            SUM(cs.shared_license_cost) +
-            SUM(cs.unallocated_infrastructure_cost) +
-            SUM(cs.unallocated_license_cost)
-          ) -
-          (
-            SUM(cs.dedicated_infrastructure_credit) +
-            SUM(cs.dedicated_license_credit) +
-            SUM(cs.shared_infrastructure_credit) +
-            SUM(cs.shared_license_credit) +
-            SUM(cs.unallocated_infrastructure_credit) +
-            SUM(cs.unallocated_license_credit)
-          ) AS cost
+        , SUM(cs.dedicated_infrastructure_cost + cs.dedicated_license_cost
+            + cs.shared_infrastructure_cost + cs.shared_license_cost
+            + cs.unallocated_infrastructure_cost + cs.unallocated_license_cost)
+          AS cost
+        , SUM(cs.dedicated_infrastructure_credit + cs.dedicated_license_credit
+            + cs.shared_infrastructure_credit + cs.shared_license_credit
+            + cs.unallocated_infrastructure_credit + cs.unallocated_license_credit)
+          AS credit
       FROM `cloudgenera-public.TestBigQuery.budgets` b
       LEFT JOIN `cloudgenera-public.TestBigQuery.budget-items` bi ON b.BudgetName = bi.BudgetName
       LEFT JOIN `cloudgenera-public.TestBigQuery.cost_summary` cs ON bi.CostGroupName = cs.cost_group
@@ -37,15 +29,15 @@ view: budget_summary {
     sql: ${TABLE}.budget_name ;;
   }
 
-  dimension: share {
-    type: number
-    sql: ${TABLE}.share ;;
-  }
-
   dimension_group: invoice_month {
     type: time
     timeframes: [date, week, month, year]
     sql: ${TABLE}.invoice_month ;;
+  }
+
+  dimension: share {
+    type: number
+    sql: ${TABLE}.share ;;
   }
 
   dimension: cost {
@@ -53,8 +45,13 @@ view: budget_summary {
     sql: ${TABLE}.cost ;;
   }
 
-  measure: cost_share {
+  dimension: credit {
+    type: number
+    sql: ${TABLE}.credit ;;
+  }
+
+  measure: spend {
     type: sum
-    sql: ${cost} * ${share} ;;
+    sql: (${cost} + ${credit}) * ${share} ;;
   }
 }
