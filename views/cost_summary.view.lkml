@@ -82,16 +82,46 @@ view: cost_summary {
           +${TABLE}.shared_infrastructure_credit+${TABLE}.shared_license_credit
           +${TABLE}.unallocated_infrastructure_credit+${TABLE}.unallocated_license_credit;;
   }
+  measure: dedicated_usage {
+    type: sum
+    sql:  ${dedicated_infrastructure_cost}+${dedicated_license_cost};;
+    value_format: "$#,##0.00"
+  }
+  measure: dedicated_credit {
+    type: sum
+    sql:  ${dedicated_infrastructure_credit}+${dedicated_license_credit};;
+    value_format: "$#,##0.00"
+  }
   measure: dedicated_net_cost {
     type: sum
     sql:  ${dedicated_infrastructure_cost}+${dedicated_license_cost}
           +${dedicated_infrastructure_credit}+${dedicated_license_credit};;
     value_format: "$#,##0.00"
   }
+  measure: shared_usage {
+    type: sum
+    sql:  ${shared_infrastructure_cost}+${shared_license_cost};;
+    value_format: "$#,##0.00"
+  }
+  measure: shared_credit {
+    type: sum
+    sql:  ${shared_infrastructure_credit}+${shared_license_credit};;
+    value_format: "$#,##0.00"
+  }
   measure: shared_net_cost {
     type: sum
     sql:  ${shared_infrastructure_cost}+${shared_license_cost}
           +${shared_infrastructure_credit}+${shared_license_credit};;
+    value_format: "$#,##0.00"
+  }
+  measure: unallocated_usage {
+    type: sum
+    sql:  ${unallocated_infrastructure_cost}+${unallocated_license_cost};;
+    value_format: "$#,##0.00"
+  }
+  measure: unallocated_credit {
+    type: sum
+    sql:  ${unallocated_infrastructure_credit}+${unallocated_license_credit};;
     value_format: "$#,##0.00"
   }
   measure: unallocated_net_cost {
@@ -104,6 +134,12 @@ view: cost_summary {
     type: count_distinct
     sql: ${invoice_date_month} ;;
     filters: [amount_type: "Current Month Estimate, Previous Month, History"]
+  }
+  measure: dedicated_plus_shared_usage {
+    type: sum
+    sql:  ${dedicated_infrastructure_cost}+${dedicated_license_cost}
+          +${shared_infrastructure_cost}+${shared_license_cost};;
+    value_format: "$#,##0.00"
   }
   measure: dedicated_plus_shared_net_cost {
     type: sum
