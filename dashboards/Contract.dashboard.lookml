@@ -9,11 +9,11 @@
   - title: Google Contract Commit Tracker
     name: Google Contract Commit Tracker
     model: cbsf_v1
-    explore: contract_agreement_v2
+    explore: contract_agreement
     type: looker_grid
-    fields: [contract_agreement_v2.term_years, contract_agreement_v2.commit, contract_agreement_v2.prev_year_rollover_cost,
-      contract_agreement_v2.total_cost, contract_agreement_v2.rollover_cost, contract_agreement_v2.unused]
-    sorts: [contract_agreement_v2.term_years]
+    fields: [contract_agreement.term_years, contract_agreement.commit, contract_agreement.prev_year_rollover_cost,
+      contract_agreement.total_cost, contract_agreement.rollover_cost, contract_agreement.unused]
+    sorts: [contract_agreement.term_years]
     limit: 500
     column_limit: 50
     show_view_names: false
@@ -37,10 +37,10 @@
     truncate_header: false
     minimum_column_width: 75
     series_labels:
-      contract_agreement_v2.total_cost: Total Cloud Spend
-      contract_agreement_v2.rollover_cost: Rollover Amount
-      contract_agreement_v2.unused: True Up Amount
-      contract_agreement_v2.prev_year_rollover_cost: Prev Year Rollover
+      contract_agreement.total_cost: Total Cloud Spend
+      contract_agreement.rollover_cost: Rollover Amount
+      contract_agreement.unused: True Up Amount
+      contract_agreement.prev_year_rollover_cost: Prev Year Rollover
     conditional_formatting: [{type: along a scale..., value: !!null '', background_color: "#1A73E8",
         font_color: !!null '', color_application: {collection_id: 7c56cc21-66e4-41c9-81ce-a60e1c3967b2,
           palette_id: 4a00499b-c0fe-4b15-a304-4083c07ff4c4, options: {constraints: {
@@ -48,31 +48,31 @@
             mirror: true, reverse: false, stepped: false}}, bold: false, italic: false,
         strikethrough: false, fields: !!null ''}]
     series_value_format:
-      contract_agreement_v2.commit:
+      contract_agreement.commit:
         name: usd
         decimals: '2'
         format_string: "$#,##0.00"
         label: U.S. Dollars (2)
         label_prefix: U.S. Dollars
-      contract_agreement_v2.prev_year_rollover_cost:
+      contract_agreement.prev_year_rollover_cost:
         name: usd
         decimals: '2'
         format_string: "$#,##0.00"
         label: U.S. Dollars (2)
         label_prefix: U.S. Dollars
-      contract_agreement_v2.total_cost:
+      contract_agreement.total_cost:
         name: eur
         decimals: '2'
         format_string: '"€"#,##0.00'
         label: Euros (2)
         label_prefix: Euros
-      contract_agreement_v2.rollover_cost:
+      contract_agreement.rollover_cost:
         name: usd
         decimals: '2'
         format_string: "$#,##0.00"
         label: U.S. Dollars (2)
         label_prefix: U.S. Dollars
-      contract_agreement_v2.unused:
+      contract_agreement.unused:
         name: usd
         decimals: '2'
         format_string: "$#,##0.00"
@@ -80,7 +80,7 @@
         label_prefix: U.S. Dollars
     defaults_version: 1
     listen:
-      Term Years: contract_agreement_v2.term_years
+      Term Years: contract_agreement.term_years
     row: 0
     col: 0
     width: 24
@@ -88,7 +88,7 @@
   - title: Google Compute Engine Spend
     name: Google Compute Engine Spend
     model: cbsf_v1
-    explore: contract_agreement_v2
+    explore: contract_agreement
     type: single_value
     fields: [sum_of_dedicated]
     filters: {}
@@ -97,7 +97,7 @@
     dynamic_fields:
     - _kind_hint: measure
       _type_hint: number
-      based_on: contract_agreement_v2.dedicated
+      based_on: contract_agreement.dedicated
       expression: ''
       label: Sum of Dedicated
       measure: sum_of_dedicated
@@ -114,7 +114,7 @@
     value_format: "$#,##0.00"
     defaults_version: 1
     listen:
-      Term Years: contract_agreement_v2.term_years
+      Term Years: contract_agreement.term_years
     row: 6
     col: 0
     width: 8
@@ -122,7 +122,7 @@
   - title: Total Cloud Spend
     name: Total Cloud Spend
     model: cbsf_v1
-    explore: contract_agreement_v2
+    explore: contract_agreement
     type: single_value
     fields: [sum_of_total_cost]
     limit: 500
@@ -130,7 +130,7 @@
     dynamic_fields:
     - _kind_hint: measure
       _type_hint: number
-      based_on: contract_agreement_v2.total_cost
+      based_on: contract_agreement.total_cost
       expression: ''
       label: Sum of Total Cost
       measure: sum_of_total_cost
@@ -147,7 +147,7 @@
     value_format: "$#,##0.00"
     defaults_version: 1
     listen:
-      Term Years: contract_agreement_v2.term_years
+      Term Years: contract_agreement.term_years
     row: 6
     col: 8
     width: 8
@@ -155,7 +155,7 @@
   - title: Unallocated Spend
     name: Unallocated Spend
     model: cbsf_v1
-    explore: contract_agreement_v2
+    explore: contract_agreement
     type: single_value
     fields: [sum_of_unallocated]
     limit: 500
@@ -163,7 +163,7 @@
     dynamic_fields:
     - _kind_hint: measure
       _type_hint: number
-      based_on: contract_agreement_v2.unallocated
+      based_on: contract_agreement.unallocated
       expression: ''
       label: Sum of Unallocated
       measure: sum_of_unallocated
@@ -180,7 +180,7 @@
     value_format: "$#,##0.00"
     defaults_version: 1
     listen:
-      Term Years: contract_agreement_v2.term_years
+      Term Years: contract_agreement.term_years
     row: 6
     col: 16
     width: 8
@@ -197,6 +197,6 @@
       type: button_group
       display: inline
     model: cbsf_v1
-    explore: contract_agreement_v2
+    explore: contract_agreement
     listens_to_filters: []
-    field: contract_agreement_v2.term_years
+    field: contract_agreement.term_years

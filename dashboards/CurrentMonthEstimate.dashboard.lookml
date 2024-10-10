@@ -222,9 +222,9 @@
   - title: Monthly Google Commit
     name: Monthly Google Commit
     model: cbsf_v1
-    explore: contract_agreement_v2
+    explore: contract_agreement
     type: single_value
-    fields: [contract_agreement_v2.current_budget]
+    fields: [contract_agreement.current_budget]
     limit: 500
     column_limit: 50
     custom_color_enabled: true
