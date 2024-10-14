@@ -3,59 +3,76 @@ view: contract_agreement {
 
   dimension: commit {
     type: number
-    sql: ${TABLE}.Commit ;;
+    sql: ${TABLE}.commit ;;
   }
   dimension: dedicated {
     type: number
-    sql: ${TABLE}.Dedicated ;;
+    sql: ${TABLE}.dedicated ;;
+  }
+  dimension: shared {
+    type: number
+    sql: ${TABLE}.shared ;;
   }
   dimension: license {
     type: number
-    sql: ${TABLE}.License ;;
+    sql: ${TABLE}.license ;;
   }
   dimension: prev_year_rollover_cost {
     type: number
-    sql: ${TABLE}.PrevYearRolloverCost ;;
+    sql: ${TABLE}.prev_year_rollover_cost ;;
   }
   dimension: rollover_cost {
     type: number
-    sql: ${TABLE}.RolloverCost ;;
+    sql: ${TABLE}.rollover_cost ;;
   }
   dimension: term_type {
     type: string
-    sql: ${TABLE}.TermType ;;
+    sql: ${TABLE}.term_type ;;
   }
   dimension: term_years {
     type: string
-    sql: ${TABLE}.TermYears ;;
+    sql: ${TABLE}.term_years ;;
   }
   dimension: total_cost {
     type: number
-    sql: ${TABLE}.TotalCost ;;
+    sql: ${TABLE}.total_cost ;;
   }
   dimension: unallocated {
     type: number
-    sql: ${TABLE}.Unallocated ;;
+    sql: ${TABLE}.unallocated ;;
   }
   dimension: unused {
     type: number
-    sql: ${TABLE}.Unused ;;
+    sql: ${TABLE}.unused ;;
   }
   dimension: total_commitment {
     type: number
     sql: ${commit} + ${prev_year_rollover_cost} ;;
   }
+  measure: sum_total_cost {
+    type: sum
+    sql: ${total_cost} ;;
+    value_format: "$#,##0.00"
+  }
   measure: contract_dedicated {
     type: sum
     sql: ${dedicated} ;;
+    value_format: "$#,##0.00"
+  }
+  measure: contract_shared {
+    type: sum
+    sql: ${shared} ;;
+    value_format: "$#,##0.00"
   }
   measure: contract_unallocated {
     type: sum
     sql: ${unallocated} ;;
+    value_format: "$#,##0.00"
   }
   measure: contract_license {
     type: sum
     sql: ${license} ;;
+    value_format: "$#,##0.00"
   }
   measure: current_commit {
     type: sum
