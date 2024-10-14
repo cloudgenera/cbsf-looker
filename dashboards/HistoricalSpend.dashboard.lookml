@@ -6,14 +6,13 @@
   description: ''
   preferred_slug: DHdluVkGpsiXVD89ZWjZqM
   elements:
-  - title: Total Cloud Spend
-    name: Total Cloud Spend
+  - title: Total Historical Cloud Spend
+    name: Total Historical Cloud Spend
     model: cbsf_v1
     explore: cost_summary
     type: single_value
     fields: [sum_of_net_cost]
-    filters:
-      cost_summary.amount_type: Previous Month,History
+    filters: {}
     limit: 500
     column_limit: 50
     dynamic_fields:
@@ -37,20 +36,19 @@
     defaults_version: 1
     listen:
       Cost Group: cost_summary.cost_group
-      Invoice Date: cost_summary.invoice_date_date
+      Amount Type: cost_summary.amount_type
     row: 7
-    col: 18
-    width: 6
+    col: 17
+    width: 7
     height: 6
-  - title: Google Cloud Spend by Cost Group
-    name: Google Cloud Spend by Cost Group
+  - title: Cloud Spend by Cost Group
+    name: Cloud Spend by Cost Group
     model: cbsf_v1
     explore: cost_summary
     type: looker_grid
     fields: [cost_summary.cost_group, cost_summary.dedicated_net_cost, cost_summary.shared_net_cost,
       cost_summary.unallocated_net_cost, sum_of_net_cost]
-    filters:
-      cost_summary.amount_type: Previous Month,History
+    filters: {}
     sorts: [cost_summary.cost_group]
     limit: 500
     column_limit: 50
@@ -94,10 +92,10 @@
     defaults_version: 1
     listen:
       Cost Group: cost_summary.cost_group
-      Invoice Date: cost_summary.invoice_date_date
+      Amount Type: cost_summary.amount_type
     row: 7
     col: 0
-    width: 18
+    width: 17
     height: 6
   - title: Historical Performance by Cost Group
     name: Historical Performance by Cost Group
@@ -105,9 +103,9 @@
     explore: cost_summary
     type: looker_column
     fields: [cost_summary.invoice_date_quarter, cost_summary.invoice_date_month_name,
-      cost_summary.invoice_date_month, sum_of_net_cost]
-    filters:
-      cost_summary.amount_type: Previous Month,History
+      cost_summary.invoice_date_month, cost_summary.amount_type, sum_of_total_cost,
+      sum_of_total_credit, sum_of_net_cost]
+    filters: {}
     sorts: [cost_summary.invoice_date_month]
     limit: 500
     column_limit: 50
@@ -120,6 +118,26 @@
       based_on: cost_summary.net_cost
       _kind_hint: measure
       measure: sum_of_net_cost
+      type: sum
+      _type_hint: number
+    - category: measure
+      expression: ''
+      label: Sum of Total Cost
+      value_format:
+      value_format_name: usd
+      based_on: cost_summary.total_cost
+      _kind_hint: measure
+      measure: sum_of_total_cost
+      type: sum
+      _type_hint: number
+    - category: measure
+      expression: ''
+      label: Sum of Total Credit
+      value_format:
+      value_format_name: usd
+      based_on: cost_summary.total_credit
+      _kind_hint: measure
+      measure: sum_of_total_credit
       type: sum
       _type_hint: number
     x_axis_gridlines: false
@@ -152,11 +170,16 @@
     x_axis_zoom: true
     y_axis_zoom: true
     label_value_format: ''
-    hidden_fields: [cost_summary.invoice_date_month]
+    series_labels:
+      sum_of_total_cost: Usage Amount
+      sum_of_total_credit: Credit
+      sum_of_net_cost: Net Cost
+    hidden_fields: [cost_summary.invoice_date_month, cost_summary.amount_type]
     defaults_version: 1
+    hidden_pivots: {}
     listen:
       Cost Group: cost_summary.cost_group
-      Invoice Date: cost_summary.invoice_date_date
+      Amount Type: cost_summary.amount_type
     row: 0
     col: 0
     width: 24
@@ -175,17 +198,19 @@
     explore: cost_summary
     listens_to_filters: []
     field: cost_summary.cost_group
-  - name: Invoice Date
-    title: Invoice Date
+  - name: Amount Type
+    title: Amount Type
     type: field_filter
-    default_value: 2019/09/01 to 2025/12/31
-    allow_multiple_values: false
-    required: false
+    default_value: History,Previous Month
+    allow_multiple_values: true
+    required: true
     ui_config:
-      type: advanced
+      type: button_group
       display: popover
-      options: []
+      options:
+      - History
+      - Previous Month
     model: cbsf_v1
     explore: cost_summary
     listens_to_filters: []
-    field: cost_summary.invoice_date_date
+    field: cost_summary.amount_type

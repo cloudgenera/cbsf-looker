@@ -11,7 +11,7 @@
     model: cbsf_v1
     explore: cost_summary
     type: single_value
-    fields: [cost_summary.dedicated_net_cost]
+    fields: [cost_summary.dedicated_usage]
     filters:
       cost_summary.amount_type: Current Month Estimate
     limit: 500
@@ -45,19 +45,29 @@
     model: cbsf_v1
     explore: cost_summary
     type: single_value
-    fields: [cost_summary.dedicated_net_cost, cost_summary.current_and_previous_months_count]
+    fields: [cost_summary.dedicated_usage]
     filters:
       cost_summary.amount_type: Current Month Estimate,Previous Month,History
+      cost_summary.invoice_date_month: after 12 months ago
     limit: 500
     column_limit: 50
     dynamic_fields:
     - category: table_calculation
-      expression: "${cost_summary.dedicated_net_cost}/${cost_summary.current_and_previous_months_count}"
+      expression: "${cost_summary.dedicated_usage}/${cost_summary.current_and_previous_months_count}"
       label: monthly_avg
       value_format:
-      value_format_name:
+      value_format_name: usd
       _kind_hint: measure
       table_calculation: monthly_avg
+      _type_hint: number
+      is_disabled: true
+    - category: table_calculation
+      expression: "${cost_summary.dedicated_usage}/12"
+      label: monthly_avg
+      value_format:
+      value_format_name: usd
+      _kind_hint: measure
+      table_calculation: monthly_avg_1
       _type_hint: number
     custom_color_enabled: true
     show_single_value_title: true
@@ -69,25 +79,27 @@
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
     value_format: "$#,##0.00"
-    hidden_fields: [cost_summary.dedicated_net_cost, cost_summary.current_and_previous_months_count]
+    hidden_fields: [cost_summary.dedicated_usage]
     defaults_version: 1
+    hidden_pivots: {}
     listen: {}
     row: 0
     col: 8
     width: 8
     height: 5
-  - title: Cost Distributions by Customer (>1k)
-    name: Cost Distributions by Customer (>1k)
+  - title: Cost Allocations by Cost Group (>1k)
+    name: Cost Allocations by Cost Group (>1k)
     model: cbsf_v1
     explore: cost_summary
     type: looker_column
-    fields: [cost_summary.cost_group, cost_summary.dedicated_net_cost, cost_summary.shared_net_cost,
-      cost_summary.dedicated_plus_shared_net_cost]
+    fields: [cost_summary.cost_group, cost_summary.dedicated_usage, cost_summary.shared_usage,
+      cost_summary.dedicated_plus_shared_usage]
     filters:
       cost_summary.dedicated_plus_shared_net_cost: ">=1000"
       cost_summary.amount_type: Current Month Estimate
-    sorts: [cost_summary.dedicated_plus_shared_net_cost desc]
+    sorts: [cost_summary.dedicated_plus_shared_usage desc]
     limit: 500
+    column_limit: 50
     x_axis_gridlines: false
     y_axis_gridlines: true
     show_view_names: false
@@ -115,8 +127,9 @@
     show_totals_labels: false
     show_silhouette: false
     totals_color: "#808080"
-    hidden_fields: [cost_summary.dedicated_plus_shared_net_cost]
+    hidden_fields: [cost_summary.dedicated_plus_shared_usage]
     defaults_version: 1
+    hidden_pivots: {}
     listen: {}
     row: 5
     col: 0
@@ -127,11 +140,11 @@
     model: cbsf_v1
     explore: cost_summary
     type: looker_grid
-    fields: [cost_summary.cost_group, cost_summary.dedicated_net_cost, cost_summary.shared_net_cost,
-      cost_summary.dedicated_plus_shared_net_cost]
+    fields: [cost_summary.cost_group, cost_summary.dedicated_usage, cost_summary.shared_usage,
+      cost_summary.dedicated_plus_shared_usage]
     filters:
       cost_summary.amount_type: Current Month Estimate
-    sorts: [cost_summary.dedicated_plus_shared_net_cost desc]
+    sorts: [cost_summary.dedicated_plus_shared_usage desc]
     limit: 500
     column_limit: 50
     total: true
@@ -184,20 +197,22 @@
     show_silhouette: false
     totals_color: "#808080"
     defaults_version: 1
+    hidden_fields:
+    hidden_pivots: {}
     listen: {}
     row: 5
     col: 8
     width: 8
     height: 9
-  - title: Google Spend Estimate Pie Chart
-    name: Google Spend Estimate Pie Chart
+  - title: Current Spend Estimate Pie Chart
+    name: Current Spend Estimate Pie Chart
     model: cbsf_v1
     explore: cost_summary
     type: looker_pie
-    fields: [cost_summary.cost_group, sum_of_net_cost]
+    fields: [cost_summary.cost_group, sum_of_total_cost]
     filters:
       cost_summary.amount_type: Current Month Estimate
-    sorts: [cost_summary.cost_group]
+    sorts: [sum_of_total_cost desc]
     limit: 500
     column_limit: 50
     dynamic_fields:
@@ -211,16 +226,24 @@
       measure: sum_of_net_cost
       type: sum
       _type_hint: number
+    - _kind_hint: measure
+      _type_hint: number
+      based_on: cost_summary.total_cost
+      expression: ''
+      label: Sum of Total Cost
+      measure: sum_of_total_cost
+      type: sum
     value_labels: legend
     label_type: labPer
     defaults_version: 1
+    hidden_pivots: {}
     listen: {}
     row: 5
     col: 16
     width: 8
     height: 9
-  - title: Monthly Google Commit
-    name: Monthly Google Commit
+  - title: Monthly Commitment
+    name: Monthly Commitment
     model: cbsf_v1
     explore: contract_agreement
     type: single_value
@@ -238,7 +261,7 @@
     conditional_formatting_include_nulls: false
     value_format: "$#,##0.00"
     defaults_version: 1
-    listen: {}
+    hidden_pivots: {}
     row: 0
     col: 16
     width: 8
