@@ -1,6 +1,6 @@
 ---
-- dashboard: forecast_spend
-  title: Forecast Spend
+- dashboard: forecast_usage
+  title: Forecast Usage
   layout: newspaper
   preferred_viewer: dashboards-next
   description: ''
@@ -11,9 +11,8 @@
     model: cbsf_v1
     explore: cost_summary
     type: single_value
-    fields: [sum_of_net_cost]
-    filters:
-      cost_summary.amount_type: Current Month Estimate,Future
+    fields: [sum_of_total_cost]
+    filters: {}
     limit: 500
     column_limit: 50
     dynamic_fields:
@@ -24,6 +23,16 @@
       label: Sum of Net Cost
       measure: sum_of_net_cost
       type: sum
+    - category: measure
+      expression: ''
+      label: Sum of Total Cost
+      value_format:
+      value_format_name: usd
+      based_on: cost_summary.total_cost
+      _kind_hint: measure
+      measure: sum_of_total_cost
+      type: sum
+      _type_hint: number
     custom_color_enabled: true
     show_single_value_title: true
     show_comparison: false
@@ -36,21 +45,20 @@
     value_format: "$#,##0.00"
     defaults_version: 1
     listen:
-      Invoice Date Month: cost_summary.invoice_date_month
       Cost Group: cost_summary.cost_group
+      Amount Type: cost_summary.amount_type
     row: 0
-    col: 19
-    width: 5
-    height: 6
+    col: 0
+    width: 9
+    height: 3
   - title: Cloud Spend Forecast
     name: Cloud Spend Forecast
     model: cbsf_v1
     explore: cost_summary
     type: looker_column
-    fields: [cost_summary.dedicated_net_cost, cost_summary.shared_net_cost, cost_summary.invoice_date_month_name,
-      cost_summary.invoice_date_quarter, cost_summary.invoice_date_month]
-    filters:
-      cost_summary.amount_type: Current Month Estimate,Future
+    fields: [cost_summary.invoice_date_month_name, cost_summary.invoice_date_quarter,
+      cost_summary.invoice_date_month, cost_summary.dedicated_usage, cost_summary.shared_usage]
+    filters: {}
     sorts: [cost_summary.invoice_date_month]
     limit: 500
     column_limit: 50
@@ -92,22 +100,21 @@
     defaults_version: 1
     hidden_fields: [cost_summary.invoice_date_month]
     listen:
-      Invoice Date Month: cost_summary.invoice_date_month
       Cost Group: cost_summary.cost_group
-    row: 0
+      Amount Type: cost_summary.amount_type
+    row: 3
     col: 0
-    width: 19
+    width: 24
     height: 6
   - title: Cost Allocation Forecast
     name: Cost Allocation Forecast
     model: cbsf_v1
     explore: cost_summary
     type: looker_grid
-    fields: [cost_summary.cost_group, cost_summary.invoice_date_month, sum_of_net_cost]
+    fields: [cost_summary.cost_group, cost_summary.invoice_date_month, sum_of_total_cost]
     pivots: [cost_summary.cost_group]
     fill_fields: [cost_summary.invoice_date_month]
-    filters:
-      cost_summary.amount_type: Current Month Estimate,Future
+    filters: {}
     sorts: [cost_summary.cost_group, cost_summary.invoice_date_month]
     limit: 500
     column_limit: 50
@@ -121,6 +128,16 @@
       label: Sum of Net Cost
       measure: sum_of_net_cost
       type: sum
+    - category: measure
+      expression: ''
+      label: Sum of Total Cost
+      value_format:
+      value_format_name: usd
+      based_on: cost_summary.total_cost
+      _kind_hint: measure
+      measure: sum_of_total_cost
+      type: sum
+      _type_hint: number
     show_view_names: false
     show_row_numbers: true
     transpose: false
@@ -143,37 +160,38 @@
     minimum_column_width: 75
     series_labels:
       sum_of_net_cost: Net Cost
+      sum_of_total_cost: Usage
     series_column_widths:
-      Accredit_sum_of_net_cost: 148
+      cloud billing show back and forecast_sum_of_total_cost: 88
     series_cell_visualizations:
       sum_of_net_cost:
         is_active: false
-    series_value_format:
-      sum_of_net_cost: "$#,##0.00"
     hidden_pivots: {}
     defaults_version: 1
     listen:
-      Invoice Date Month: cost_summary.invoice_date_month
       Cost Group: cost_summary.cost_group
-    row: 6
+      Amount Type: cost_summary.amount_type
+    row: 9
     col: 0
     width: 24
-    height: 6
+    height: 7
   filters:
-  - name: Invoice Date Month
-    title: Invoice Date Month
+  - name: Amount Type
+    title: Amount Type
     type: field_filter
-    default_value: 2024/10/01 to 2025/12/31
+    default_value: Current Month Estimate,Future
     allow_multiple_values: true
-    required: false
+    required: true
     ui_config:
-      type: day_range_picker
-      display: inline
-      options: []
+      type: button_group
+      display: popover
+      options:
+      - Current Month Estimate
+      - Future
     model: cbsf_v1
     explore: cost_summary
     listens_to_filters: []
-    field: cost_summary.invoice_date_month
+    field: cost_summary.amount_type
   - name: Cost Group
     title: Cost Group
     type: field_filter
