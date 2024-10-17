@@ -11,8 +11,7 @@
     model: cbsf_v1
     explore: contract_agreement
     type: looker_grid
-    fields: [contract_agreement.term_years, contract_agreement.commit, contract_agreement.prev_year_rollover_cost,
-      contract_agreement.total_cost]
+    fields: [contract_agreement.term_years, contract_agreement.commit, contract_agreement.total_cost]
     sorts: [contract_agreement.term_years]
     limit: 500
     column_limit: 50
@@ -55,10 +54,10 @@
       _type_hint: number
     - category: table_calculation
       expression: |-
-        if(0.1*${contract_agreement.commit} < (${contract_agreement.commit}+${contract_agreement.prev_year_rollover_cost} - (${contract_agreement.total_cost}+${manual_add_forecast})),
+        if(0.1*${contract_agreement.commit} < (${contract_agreement.commit}+${manual_prev_year_rollover} - (${contract_agreement.total_cost}+${manual_add_forecast})),
           0.1*${contract_agreement.commit},
-          if(${contract_agreement.commit}+${contract_agreement.prev_year_rollover_cost}-(${contract_agreement.total_cost}+${manual_add_forecast}) > 0,
-            ${contract_agreement.commit}+${contract_agreement.prev_year_rollover_cost}-(${contract_agreement.total_cost}+${manual_add_forecast}),
+          if(${contract_agreement.commit}+${manual_prev_year_rollover}-(${contract_agreement.total_cost}+${manual_add_forecast}) > 0,
+            ${contract_agreement.commit}+${manual_prev_year_rollover}-(${contract_agreement.total_cost}+${manual_add_forecast}),
             0
           )
         )
@@ -71,8 +70,8 @@
     - category: table_calculation
       expression: |-
         if(
-          (${contract_agreement.commit}+${contract_agreement.prev_year_rollover_cost}-(${contract_agreement.total_cost}+${manual_add_forecast})) > 0,
-          ${contract_agreement.commit}+${contract_agreement.prev_year_rollover_cost}-(${contract_agreement.total_cost}+${manual_add_forecast})-${rollover_cost},
+          (${contract_agreement.commit}+${manual_prev_year_rollover}-(${contract_agreement.total_cost}+${manual_add_forecast})) > 0,
+          ${contract_agreement.commit}+${manual_prev_year_rollover}-(${contract_agreement.total_cost}+${manual_add_forecast})-${rollover_cost},
           0
         )
       label: true_up
@@ -80,6 +79,20 @@
       value_format_name: usd
       _kind_hint: dimension
       table_calculation: true_up
+      _type_hint: number
+    - category: table_calculation
+      expression: |-
+        if(${contract_agreement.term_years}="September 2022 - August 2023",
+          0,
+          if(${contract_agreement.term_years}="September 2023 - August 2024",
+            300000,
+            0)
+        )
+      label: manual_prev_year_rollover
+      value_format:
+      value_format_name: usd
+      _kind_hint: dimension
+      table_calculation: manual_prev_year_rollover
       _type_hint: number
     show_view_names: false
     show_row_numbers: true
@@ -98,8 +111,8 @@
     conditional_formatting_include_nulls: false
     show_sql_query_menu_options: false
     column_order: ["$$$_row_numbers_$$$", contract_agreement.term_years, contract_agreement.commit,
-      contract_agreement.prev_year_rollover_cost, contract_agreement.total_cost, manual_add_forecast,
-      manual_add_credit, actual_cost, rollover_cost, true_up]
+      contract_agreement.prev_year_rollover_cost, manual_prev_year_rollover, contract_agreement.total_cost,
+      manual_add_forecast, manual_add_credit, actual_cost, rollover_cost, true_up]
     show_totals: true
     show_row_totals: true
     truncate_header: false
@@ -111,6 +124,7 @@
       actual_cost: Actual Cost
       true_up: True Up
       rollover_cost: Rollover Cost
+      manual_prev_year_rollover: Prev Year Rollover
     conditional_formatting: [{type: along a scale..., value: !!null '', background_color: "#1A73E8",
         font_color: !!null '', color_application: {collection_id: 7c56cc21-66e4-41c9-81ce-a60e1c3967b2,
           palette_id: 4a00499b-c0fe-4b15-a304-4083c07ff4c4, options: {constraints: {
