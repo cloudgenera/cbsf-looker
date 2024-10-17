@@ -47,6 +47,7 @@
     listen:
       Cost Group: cost_summary.cost_group
       Amount Type: cost_summary.amount_type
+      Invoice Date Date: cost_summary.invoice_date_date
     row: 0
     col: 0
     width: 9
@@ -102,6 +103,7 @@
     listen:
       Cost Group: cost_summary.cost_group
       Amount Type: cost_summary.amount_type
+      Invoice Date Date: cost_summary.invoice_date_date
     row: 3
     col: 0
     width: 24
@@ -171,11 +173,25 @@
     listen:
       Cost Group: cost_summary.cost_group
       Amount Type: cost_summary.amount_type
+      Invoice Date Date: cost_summary.invoice_date_date
     row: 9
     col: 0
     width: 24
     height: 7
   filters:
+  - name: Cost Group
+    title: Cost Group
+    type: field_filter
+    default_value: ''
+    allow_multiple_values: true
+    required: false
+    ui_config:
+      type: tag_list
+      display: popover
+    model: cbsf_v1
+    explore: cost_summary
+    listens_to_filters: []
+    field: cost_summary.cost_group
   - name: Amount Type
     title: Amount Type
     type: field_filter
@@ -192,16 +208,17 @@
     explore: cost_summary
     listens_to_filters: []
     field: cost_summary.amount_type
-  - name: Cost Group
-    title: Cost Group
+  - name: Invoice Date Date
+    title: Invoice Date Date
     type: field_filter
-    default_value: ''
+    default_value: 2024/10/01 to 2026/01/02
     allow_multiple_values: true
     required: false
     ui_config:
-      type: tag_list
-      display: popover
+      type: day_range_picker
+      display: inline
+      options: []
     model: cbsf_v1
     explore: cost_summary
     listens_to_filters: []
-    field: cost_summary.cost_group
+    field: cost_summary.invoice_date_date

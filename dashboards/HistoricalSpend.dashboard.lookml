@@ -37,6 +37,7 @@
     listen:
       Cost Group: cost_summary.cost_group
       Amount Type: cost_summary.amount_type
+      Invoice Date Date: cost_summary.invoice_date_date
     row: 7
     col: 17
     width: 7
@@ -93,12 +94,13 @@
     listen:
       Cost Group: cost_summary.cost_group
       Amount Type: cost_summary.amount_type
+      Invoice Date Date: cost_summary.invoice_date_date
     row: 7
     col: 0
     width: 17
     height: 6
-  - title: Historical Performance by Cost Group
-    name: Historical Performance by Cost Group
+  - title: Historical Performance
+    name: Historical Performance
     model: cbsf_v1
     explore: cost_summary
     type: looker_column
@@ -180,6 +182,7 @@
     listen:
       Cost Group: cost_summary.cost_group
       Amount Type: cost_summary.amount_type
+      Invoice Date Date: cost_summary.invoice_date_date
     row: 0
     col: 0
     width: 24
@@ -214,3 +217,17 @@
     explore: cost_summary
     listens_to_filters: []
     field: cost_summary.amount_type
+  - name: Invoice Date Date
+    title: Invoice Date Date
+    type: field_filter
+    default_value: 2019/09/01 to 2024/10/02
+    allow_multiple_values: true
+    required: false
+    ui_config:
+      type: day_range_picker
+      display: inline
+      options: []
+    model: cbsf_v1
+    explore: cost_summary
+    listens_to_filters: []
+    field: cost_summary.invoice_date_date
