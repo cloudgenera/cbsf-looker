@@ -47,7 +47,7 @@
     listen:
       Cost Group: cost_summary.cost_group
       Amount Type: cost_summary.amount_type
-      Invoice Date Date: cost_summary.invoice_date_date
+      Invoice Date: cost_summary.invoice_date_date
     row: 0
     col: 0
     width: 9
@@ -103,7 +103,7 @@
     listen:
       Cost Group: cost_summary.cost_group
       Amount Type: cost_summary.amount_type
-      Invoice Date Date: cost_summary.invoice_date_date
+      Invoice Date: cost_summary.invoice_date_date
     row: 3
     col: 0
     width: 24
@@ -173,7 +173,7 @@
     listen:
       Cost Group: cost_summary.cost_group
       Amount Type: cost_summary.amount_type
-      Invoice Date Date: cost_summary.invoice_date_date
+      Invoice Date: cost_summary.invoice_date_date
     row: 9
     col: 0
     width: 24
@@ -208,8 +208,8 @@
     explore: cost_summary
     listens_to_filters: []
     field: cost_summary.amount_type
-  - name: Invoice Date Date
-    title: Invoice Date Date
+  - name: Invoice Date
+    title: Invoice Date
     type: field_filter
     default_value: 2024/10/01 to 2026/01/02
     allow_multiple_values: true

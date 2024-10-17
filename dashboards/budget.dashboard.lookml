@@ -1,6 +1,6 @@
 ---
 - dashboard: budget
-  title: Budget
+  title: Budget Group Summary
   layout: newspaper
   preferred_viewer: dashboards-next
   description: ''

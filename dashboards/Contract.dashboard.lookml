@@ -1,6 +1,6 @@
 ---
 - dashboard: contract
-  title: Contract
+  title: Contract Summary
   layout: newspaper
   preferred_viewer: dashboards-next
   description: ''
