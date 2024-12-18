@@ -32,7 +32,7 @@ view: budget_summary {
   dimension_group: invoice_month {
     type: time
     timeframes: [date, week, month, year]
-    sql: ${TABLE}.invoice_month ;;
+    sql: CAST(${TABLE}.invoice_month AS TIMESTAMP) ;;
   }
 
   dimension: share {

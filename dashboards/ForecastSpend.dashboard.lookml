@@ -49,8 +49,8 @@
       Amount Type: cost_summary.amount_type
       Invoice Date: cost_summary.invoice_date_date
     row: 0
-    col: 0
-    width: 9
+    col: 7
+    width: 10
     height: 3
   - title: Cloud Spend Forecast
     name: Cloud Spend Forecast
@@ -211,7 +211,7 @@
   - name: Invoice Date
     title: Invoice Date
     type: field_filter
-    default_value: 2024/10/01 to 2026/01/02
+    default_value: 2024/12/01 to 2026/01/04
     allow_multiple_values: true
     required: false
     ui_config:

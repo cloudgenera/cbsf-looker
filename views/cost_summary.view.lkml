@@ -7,11 +7,29 @@ view: cost_summary {
   dimension_group: invoice_date {
     type: time
     timeframes: [raw, time, date, week, month, month_name, quarter, quarter_of_year, year]
-    sql: ${TABLE}.invoice_date ;;
+    sql: CAST(${TABLE}.invoice_date AS TIMESTAMP) ;;
+  }
+  dimension_group: creation_date {
+    type: time
+    timeframes: [raw, time, date, week, month, month_name, quarter, quarter_of_year, year]
+    sql: CAST(${TABLE}.creation_date AS TIMESTAMP) ;;
   }
   dimension: amount_type {
     type: string
-    sql: ${TABLE}.amount_type ;;
+    sql: CASE
+      WHEN DATE_DIFF(${invoice_date_date}, ${creation_date_date}, MONTH) = 0
+      THEN 'Current Month Estimate'
+
+      WHEN DATE_DIFF(${invoice_date_date}, ${creation_date_date}, MONTH) > 0
+      THEN 'Future'
+
+      WHEN DATE_DIFF(${invoice_date_date}, ${creation_date_date}, MONTH) = -1
+      THEN 'Previous Month'
+
+      ELSE 'History'
+
+      END
+    ;;
   }
   dimension: dedicated_infrastructure_cost {
     type: number

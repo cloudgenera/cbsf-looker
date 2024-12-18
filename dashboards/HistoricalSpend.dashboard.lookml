@@ -220,7 +220,7 @@
   - name: Invoice Date
     title: Invoice Date
     type: field_filter
-    default_value: 2019/09/01 to 2024/10/02
+    default_value: 2019/09/01 to 2024/12/02
     allow_multiple_values: true
     required: false
     ui_config:

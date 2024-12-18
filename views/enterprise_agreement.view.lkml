@@ -29,17 +29,31 @@ view: enterprise_agreement {
     type: number
     sql: ${TABLE}.rollover_cost ;;
   }
-  dimension: term_years {
-    type: string
-    sql: ${TABLE}.term_years ;;
+  dimension_group: term_start {
+    type: time
+    timeframes: [raw, time, date, week, month, month_name, quarter, quarter_of_year, year]
+    sql: CAST(${TABLE}.term_start AS TIMESTAMP) ;;
   }
-  dimension: term_start {
-    type: string
-    sql: LEFT(${TABLE}.term_years, CHARINDEX('-', ${TABLE}.term_years)-1) ;;
+  dimension_group: term_end {
+    type: time
+    timeframes: [raw, time, date, week, month, month_name, quarter, quarter_of_year, year]
+    sql: CAST(${TABLE}.term_end AS TIMESTAMP) ;;
   }
-  dimension: term_end {
+  dimension: terms {
     type: string
-    sql: RIGHT(${TABLE}.term_years, CHARINDEX('-', ${TABLE}.term_years)-1) ;;
+    sql: CONCAT(${TABLE}.term_start, " to ", ${TABLE}.term_end) ;;
+  }
+  dimension: term_type {
+    type: string
+    sql: CASE
+      WHEN DATE_DIFF(CURRENT_DATE(), ${term_start_date}, DAY) >= 0
+      AND DATE_DIFF(CURRENT_DATE(), ${term_end_date}, DAY) <= 0
+      THEN 'Current'
+
+      ELSE 'History'
+
+      END
+      ;;
   }
   dimension: true_up {
     type: number
@@ -47,5 +61,19 @@ view: enterprise_agreement {
   }
   measure: count {
     type: count
+  }
+  measure: total_cloud_usage {
+    type: sum
+    sql: ${cloud_usage} ;;
+    value_format: "$#,##0.00"
+  }
+  measure: current_commit {
+    type: sum
+    filters: [term_type: "Current"]
+    sql: ${commit} ;;
+  }
+  measure: current_budget {
+    type: number
+    sql: ${current_commit}/12 ;;
   }
 }
