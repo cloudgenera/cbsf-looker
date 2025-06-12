@@ -17,6 +17,12 @@ view: budgetyears {
     type: number
     sql: ${TABLE}.Year ;;
   }
+  dimension_group: budget_timestamp {
+    type: time
+    timeframes: [date, week, month, year]
+    sql: CAST(DATE(${TABLE}.Year, ${TABLE}.Month, 1) AS TIMESTAMP) ;;
+    convert_tz: no
+  }
   measure: count {
     type: count
     drill_fields: [budget_name]

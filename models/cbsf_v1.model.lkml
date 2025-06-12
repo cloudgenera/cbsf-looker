@@ -15,6 +15,8 @@ persist_with: cbsf_v1_default_datagroup
 
 explore: budget_summary {}
 
+explore: budget_summary_derived {}
+
 explore: budgetitems {
   join: budgets {
     type: left_outer
@@ -70,3 +72,5 @@ explore: cost_summary {
 explore: contract_agreement {}
 
 explore: enterprise_agreement {}
+
+explore: cost_summary_derived {}

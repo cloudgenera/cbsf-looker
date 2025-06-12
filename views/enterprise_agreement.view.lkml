@@ -33,11 +33,13 @@ view: enterprise_agreement {
     type: time
     timeframes: [raw, time, date, week, month, month_name, quarter, quarter_of_year, year]
     sql: CAST(${TABLE}.term_start AS TIMESTAMP) ;;
+    convert_tz: no
   }
   dimension_group: term_end {
     type: time
     timeframes: [raw, time, date, week, month, month_name, quarter, quarter_of_year, year]
     sql: CAST(${TABLE}.term_end AS TIMESTAMP) ;;
+    convert_tz: no
   }
   dimension: terms {
     type: string

@@ -1,18 +1,33 @@
 view: cost_summary {
   sql_table_name: `TestBigQuery.cost_summary` ;;
+  dimension: id {
+    primary_key: yes
+    type: string
+    sql: ${TABLE}.id ;;
+  }
   dimension: cost_group {
     type: string
-    sql: ${TABLE}.cost_group ;;
+    sql: ${TABLE}.name ;;
+  }
+  dimension: type {
+    type: string
+    sql: ${TABLE}.type ;;
   }
   dimension_group: invoice_date {
     type: time
     timeframes: [raw, time, date, week, month, month_name, quarter, quarter_of_year, year]
-    sql: CAST(${TABLE}.invoice_date AS TIMESTAMP) ;;
+    sql: CAST(${TABLE}.date AS TIMESTAMP) ;;
+    convert_tz: no
   }
+  # dimension_group: creation_date {
+  #   type: time
+  #   timeframes: [raw, time, date, week, month, month_name, quarter, quarter_of_year, year]
+  #   sql: CAST(${TABLE}.creation_date AS TIMESTAMP) ;;
+  # }
   dimension_group: creation_date {
     type: time
     timeframes: [raw, time, date, week, month, month_name, quarter, quarter_of_year, year]
-    sql: CAST(${TABLE}.creation_date AS TIMESTAMP) ;;
+    sql:  CAST(CURRENT_DATE("America/New_York") AS TIMESTAMP) ;;
   }
   dimension: amount_type {
     type: string
@@ -31,141 +46,69 @@ view: cost_summary {
       END
     ;;
   }
-  dimension: dedicated_infrastructure_cost {
+  dimension: infrastructure_usage {
     type: number
-    sql: ${TABLE}.dedicated_infrastructure_cost ;;
+    sql: ${TABLE}.infrastructureUsage ;;
   }
-  dimension: dedicated_infrastructure_credit {
+  dimension: infrastructure_credit {
     type: number
-    sql: ${TABLE}.dedicated_infrastructure_credit ;;
+    sql: ${TABLE}.infrastructureCredit ;;
   }
-  dimension: dedicated_license_cost {
+  dimension: infrastructure_net_cost {
     type: number
-    sql: ${TABLE}.dedicated_license_cost ;;
+    sql: ${TABLE}.infrastructureUsage+${TABLE}.infrastructureCredit ;;
   }
-  dimension: dedicated_license_credit {
+  dimension: license_usage {
     type: number
-    sql: ${TABLE}.dedicated_license_credit ;;
+    sql: ${TABLE}.licenseUsage ;;
   }
-  dimension: shared_infrastructure_cost {
+  dimension: license_credit {
     type: number
-    sql: ${TABLE}.shared_infrastructure_cost ;;
+    sql: ${TABLE}.licenseCredit ;;
   }
-  dimension: shared_infrastructure_credit {
+  dimension: license_net_cost {
     type: number
-    sql: ${TABLE}.shared_infrastructure_credit ;;
+    sql: ${TABLE}.licenseUsage+${TABLE}.licenseCredit ;;
   }
-  dimension: shared_license_cost {
+  dimension: amendments{
     type: number
-    sql: ${TABLE}.shared_license_cost ;;
+    sql: ${TABLE}.amendments ;;
   }
-  dimension: shared_license_credit {
+  dimension: shared_usage {
     type: number
-    sql: ${TABLE}.shared_license_credit ;;
+    sql: ${TABLE}.sharedUsage ;;
   }
-  dimension: unallocated_infrastructure_cost {
+  dimension: shared_credit {
     type: number
-    sql: ${TABLE}.unallocated_infrastructure_cost ;;
+    sql: ${TABLE}.sharedCredit ;;
   }
-  dimension: unallocated_infrastructure_credit {
+  dimension: shared_net_cost {
     type: number
-    sql: ${TABLE}.unallocated_infrastructure_credit ;;
+    sql: ${TABLE}.sharedUsage+${TABLE}.sharedCredit ;;
   }
-  dimension: unallocated_license_cost {
+  dimension: shared_amendments {
     type: number
-    sql: ${TABLE}.unallocated_license_cost ;;
+    sql: ${TABLE}.sharedAmendments ;;
   }
-  dimension: unallocated_license_credit {
-    type: number
-    sql: ${TABLE}.unallocated_license_credit ;;
-  }
+
   dimension: total_cost {
     type: number
-    sql: ${TABLE}.dedicated_infrastructure_cost+${TABLE}.dedicated_license_cost
-          +${TABLE}.shared_infrastructure_cost+${TABLE}.shared_license_cost
-          +${TABLE}.unallocated_infrastructure_cost+${TABLE}.unallocated_license_cost ;;
+    sql: ${TABLE}.infrastructureUsage+${TABLE}.licenseUsage+${TABLE}.sharedUsage ;;
   }
   dimension: total_credit {
     type: number
-    sql: ${TABLE}.dedicated_infrastructure_credit+${TABLE}.dedicated_license_credit
-          +${TABLE}.shared_infrastructure_credit+${TABLE}.shared_license_credit
-          +${TABLE}.unallocated_infrastructure_credit+${TABLE}.unallocated_license_credit ;;
+    sql: ${TABLE}.infrastructureCredit+${TABLE}.licenseCredit+${TABLE}.sharedCredit ;;
   }
   dimension: net_cost {
     type: number
-    sql:  ${TABLE}.dedicated_infrastructure_cost+${TABLE}.dedicated_license_cost
-          +${TABLE}.shared_infrastructure_cost+${TABLE}.shared_license_cost
-          +${TABLE}.unallocated_infrastructure_cost+${TABLE}.unallocated_license_cost
-          +${TABLE}.dedicated_infrastructure_credit+${TABLE}.dedicated_license_credit
-          +${TABLE}.shared_infrastructure_credit+${TABLE}.shared_license_credit
-          +${TABLE}.unallocated_infrastructure_credit+${TABLE}.unallocated_license_credit;;
-  }
-  measure: dedicated_usage {
-    type: sum
-    sql:  ${dedicated_infrastructure_cost}+${dedicated_license_cost};;
-    value_format: "$#,##0.00"
-  }
-  measure: dedicated_credit {
-    type: sum
-    sql:  ${dedicated_infrastructure_credit}+${dedicated_license_credit};;
-    value_format: "$#,##0.00"
-  }
-  measure: dedicated_net_cost {
-    type: sum
-    sql:  ${dedicated_infrastructure_cost}+${dedicated_license_cost}
-          +${dedicated_infrastructure_credit}+${dedicated_license_credit};;
-    value_format: "$#,##0.00"
-  }
-  measure: shared_usage {
-    type: sum
-    sql:  ${shared_infrastructure_cost}+${shared_license_cost};;
-    value_format: "$#,##0.00"
-  }
-  measure: shared_credit {
-    type: sum
-    sql:  ${shared_infrastructure_credit}+${shared_license_credit};;
-    value_format: "$#,##0.00"
-  }
-  measure: shared_net_cost {
-    type: sum
-    sql:  ${shared_infrastructure_cost}+${shared_license_cost}
-          +${shared_infrastructure_credit}+${shared_license_credit};;
-    value_format: "$#,##0.00"
-  }
-  measure: unallocated_usage {
-    type: sum
-    sql:  ${unallocated_infrastructure_cost}+${unallocated_license_cost};;
-    value_format: "$#,##0.00"
-  }
-  measure: unallocated_credit {
-    type: sum
-    sql:  ${unallocated_infrastructure_credit}+${unallocated_license_credit};;
-    value_format: "$#,##0.00"
-  }
-  measure: unallocated_net_cost {
-    type: sum
-    sql:  ${unallocated_infrastructure_cost}+${unallocated_license_cost}
-          +${unallocated_infrastructure_credit}+${unallocated_license_credit};;
-    value_format: "$#,##0.00"
+    sql:  ${TABLE}.infrastructureUsage+${TABLE}.licenseUsage+${TABLE}.sharedUsage
+          +${TABLE}.infrastructureCredit+${TABLE}.licenseCredit+${TABLE}.sharedCredit
+          +${amendments};;
   }
   measure: current_and_previous_months_count {
     type: count_distinct
     sql: ${invoice_date_month} ;;
     filters: [amount_type: "Current Month Estimate, Previous Month, History"]
-  }
-  measure: dedicated_plus_shared_usage {
-    type: sum
-    sql:  ${dedicated_infrastructure_cost}+${dedicated_license_cost}
-          +${shared_infrastructure_cost}+${shared_license_cost};;
-    value_format: "$#,##0.00"
-  }
-  measure: dedicated_plus_shared_net_cost {
-    type: sum
-    sql:  ${dedicated_infrastructure_cost}+${dedicated_license_cost}
-          +${dedicated_infrastructure_credit}+${dedicated_license_credit}
-          +${shared_infrastructure_cost}+${shared_license_cost}
-          +${shared_infrastructure_credit}+${shared_license_credit};;
-    value_format: "$#,##0.00"
   }
   measure: count {
     type: count
